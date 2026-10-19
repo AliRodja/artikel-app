@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
 
         Article::factory(20)->for($admin)->create();  // artikel milik akun demo
         Article::factory(10)->create();               // artikel milik user lain
-        Article::factory(3)->create(['user_id' => null]); // artikel tanpa penulis → uji INNER JOIN Soal 2
+        // Artikel tanpa penulis → uji INNER JOIN Soal 2. Sengaja Published: kalau Draft, artikel ini sudah
+        // tersaring oleh WHERE status = 1 sehingga tidak membuktikan bahwa JOIN-lah yang membuangnya.
+        Article::factory(3)->create([
+            'user_id' => null,
+            'status'  => Article::STATUS_PUBLISHED,
+        ]);
     }
 }
