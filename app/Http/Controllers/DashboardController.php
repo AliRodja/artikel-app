@@ -15,9 +15,9 @@ class DashboardController extends Controller
         // Setiap statistik memanggil $user->articles() baru, karena query builder bersifat mutable:
         // memakai satu builder untuk published() lalu draft() akan menumpuk kedua kondisi WHERE.
         return view('dashboard', [
-            'totalCount'     => $user->articles()->count(),
+            'totalCount' => $user->articles()->count(),
             'publishedCount' => $user->articles()->published()->count(),
-            'draftCount'     => $user->articles()->draft()->count(),
+            'draftCount' => $user->articles()->draft()->count(),
             'latestArticles' => $user->articles()->latest()->take(5)->get(),
         ]);
     }

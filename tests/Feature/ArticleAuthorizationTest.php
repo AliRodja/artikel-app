@@ -16,7 +16,9 @@ class ArticleAuthorizationTest extends TestCase
     use RefreshDatabase;
 
     private User $owner;
+
     private User $otherUser;
+
     private Article $article;
 
     protected function setUp(): void
@@ -31,9 +33,9 @@ class ArticleAuthorizationTest extends TestCase
     private function validPayload(array $overrides = []): array
     {
         return array_merge([
-            'title'   => 'Judul Baru',
+            'title' => 'Judul Baru',
             'content' => 'Isi artikel baru.',
-            'status'  => Article::STATUS_PUBLISHED,
+            'status' => Article::STATUS_PUBLISHED,
         ], $overrides);
     }
 

@@ -20,8 +20,8 @@ class RegisterController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             // "confirmed" → wajib ada field password_confirmation yang nilainya sama.
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);

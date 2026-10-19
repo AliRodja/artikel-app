@@ -11,17 +11,17 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
-                  ->nullable()
-                  ->constrained()          
-                  ->nullOnDelete();       
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('content');
             $table->string('image')->nullable();
-            $table->tinyInteger('status')->default(0); 
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
 
-            $table->index(['status', 'created_at']); 
+            $table->index(['status', 'created_at']);
         });
     }
 

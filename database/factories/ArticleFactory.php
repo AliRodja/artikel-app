@@ -15,11 +15,11 @@ class ArticleFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'title'   => $title,
-            'slug'    => Str::slug($title) . '-' . Str::lower(Str::random(5)),
+            'title' => $title,
+            'slug' => Str::slug($title).'-'.Str::lower(Str::random(5)),
             'content' => fake()->paragraphs(6, true),
-            'image'   => null,
-            'status'  => fake()->randomElement([Article::STATUS_DRAFT, Article::STATUS_PUBLISHED]),
+            'image' => null,
+            'status' => fake()->randomElement([Article::STATUS_DRAFT, Article::STATUS_PUBLISHED]),
             'created_at' => fake()->dateTimeBetween('-3 months'),
         ];
     }

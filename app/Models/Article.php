@@ -13,6 +13,7 @@ class Article extends Model
     use HasFactory;
 
     public const STATUS_DRAFT = 0;
+
     public const STATUS_PUBLISHED = 1;
 
     protected $fillable = ['user_id', 'title', 'slug', 'content', 'image', 'status'];
@@ -21,7 +22,6 @@ class Article extends Model
         'status' => 'integer',
     ];
 
-    
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -32,7 +32,6 @@ class Article extends Model
         return $this->belongsTo(User::class);
     }
 
-    
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_PUBLISHED);

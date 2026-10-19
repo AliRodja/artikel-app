@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $admin = User::factory()->create([
-            'name'  => 'Admin Demo',
+            'name' => 'Admin Demo',
             'email' => 'admin@example.com',
             // password default dari UserFactory: "password"
         ]);
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         // tersaring oleh WHERE status = 1 sehingga tidak membuktikan bahwa JOIN-lah yang membuangnya.
         Article::factory(3)->create([
             'user_id' => null,
-            'status'  => Article::STATUS_PUBLISHED,
+            'status' => Article::STATUS_PUBLISHED,
         ]);
     }
 }

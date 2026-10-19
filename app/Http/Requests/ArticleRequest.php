@@ -20,12 +20,12 @@ class ArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'        => ['required', 'string', 'max:255'],
-            'content'      => ['required', 'string'],
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
             // nullable: gambar boleh tidak diisi. max dalam kilobyte → 2048 KB = 2 MB.
-            'image'        => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             // Rule::in memastikan status hanya 0 (Draft) atau 1 (Published), bukan angka lain dari form yang dimanipulasi.
-            'status'       => ['required', Rule::in([Article::STATUS_DRAFT, Article::STATUS_PUBLISHED])],
+            'status' => ['required', Rule::in([Article::STATUS_DRAFT, Article::STATUS_PUBLISHED])],
             // Checkbox "hapus gambar" di form edit.
             'remove_image' => ['nullable', 'boolean'],
         ];
@@ -35,10 +35,10 @@ class ArticleRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'title'        => 'judul',
-            'content'      => 'isi artikel',
-            'image'        => 'gambar',
-            'status'       => 'status',
+            'title' => 'judul',
+            'content' => 'isi artikel',
+            'image' => 'gambar',
+            'status' => 'status',
             'remove_image' => 'hapus gambar',
         ];
     }

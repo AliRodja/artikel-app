@@ -21,9 +21,9 @@ class AuthTest extends TestCase
     public function test_user_can_register_and_is_logged_in(): void
     {
         $response = $this->post('/register', [
-            'name'                  => 'Budi',
-            'email'                 => 'budi@example.com',
-            'password'              => 'rahasia123',
+            'name' => 'Budi',
+            'email' => 'budi@example.com',
+            'password' => 'rahasia123',
             'password_confirmation' => 'rahasia123',
         ]);
 
@@ -42,9 +42,9 @@ class AuthTest extends TestCase
         User::factory()->create(['email' => 'budi@example.com']);
 
         $response = $this->from('/register')->post('/register', [
-            'name'                  => '',
-            'email'                 => 'budi@example.com', // sudah terdaftar
-            'password'              => 'rahasia123',
+            'name' => '',
+            'email' => 'budi@example.com', // sudah terdaftar
+            'password' => 'rahasia123',
             'password_confirmation' => 'beda12345',
         ]);
 
@@ -61,7 +61,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create(); // password default factory: "password"
 
         $response = $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'password',
         ]);
 
@@ -74,7 +74,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->from('/login')->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'salah-password',
         ]);
 
@@ -136,9 +136,9 @@ class AuthTest extends TestCase
         });
 
         $payload = [
-            'token'                 => $token,
-            'email'                 => $user->email,
-            'password'              => 'passwordbaru123',
+            'token' => $token,
+            'email' => $user->email,
+            'password' => 'passwordbaru123',
             'password_confirmation' => 'passwordbaru123',
         ];
 
@@ -155,9 +155,9 @@ class AuthTest extends TestCase
         $user = User::factory()->create();
 
         $this->post('/reset-password', [
-            'token'                 => 'token-palsu',
-            'email'                 => $user->email,
-            'password'              => 'passwordbaru123',
+            'token' => 'token-palsu',
+            'email' => $user->email,
+            'password' => 'passwordbaru123',
             'password_confirmation' => 'passwordbaru123',
         ])->assertSessionHasErrors('email');
 
