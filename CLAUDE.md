@@ -57,7 +57,13 @@ Rubrik (100): INNER JOIN 30 · Filter status 15 · Sorting 10 · Pagination 15 �
   artikel dihapus. Butuh `php artisan storage:link`.
 - Validasi artikel lewat **Form Request** `ArticleRequest` (dipakai store & update), pesan & atribut Bahasa Indonesia.
 - Seeder: akun demo `admin@example.com` / `password` (20 artikel), 10 artikel milik user lain, **3 artikel tanpa
-  penulis** (`user_id = null`) untuk uji INNER JOIN.
+  penulis** (`user_id = null`, **sengaja Published**) untuk uji INNER JOIN — kalau Draft, artikel itu sudah tersaring
+  oleh `status = 1` dan tidak membuktikan JOIN. Hasil uji: 19 Published → 16 setelah INNER JOIN.
+- Timezone: `config/app.php` membaca `env('APP_TIMEZONE', 'UTC')` (default Laravel menulis mati `'UTC'`),
+  `.env` → `APP_TIMEZONE=Asia/Jakarta`.
+- Bahasa: `APP_LOCALE=id`. `lang/id/{auth,passwords,validation}.php` untuk pesan berkunci; `lang/id.json` menerjemahkan
+  kalimat Inggris bawaan framework (isi email reset password & template email) — tanpa notifikasi custom.
+- Halaman error custom: `resources/views/errors/403.blade.php` (status tetap 403).
 
 ## Struktur file penting
 ```
@@ -86,6 +92,8 @@ resources/views/
   dashboard.blade.php
   articles/{index,_form,create,edit,show,report}.blade.php
   public/{index,show}.blade.php
+  errors/403.blade.php
+lang/id/{auth,passwords,validation}.php, lang/id.json
 ```
 
 ## Routes
@@ -114,10 +122,14 @@ php artisan migrate:fresh --seed   # reset database + data dummy
 ## Progres
 - [x] Tahap 1 — Database (migration, model, factory, seeder)
 - [x] Tahap 2 — Route & Controller (+ Form Request, Policy)
-- [x] Tahap 3 — Blade & UI (Tailwind) — **file sudah dibuat, pengujian sedang berjalan**
-- [ ] Tahap 4 — Testing & finishing
+- [x] Tahap 3 — Blade & UI (Tailwind) — **semua 12 checklist lolos** (diuji 2026-10-19 di browser + curl/tinker)
+- [ ] Tahap 4 — Testing & finishing — **sedang berjalan**
 
-### Checklist uji Tahap 3
+Catatan: `ArticleRequest`, `ArticlePolicy`, `ArticleController`, view `articles/*` dan `ArticleReportController`
+sempat belum ada di repo walau ditandai selesai; dibuat ulang 2026-10-19 (commit 510bc6f, 2a16b48, bfd8176).
+Jika dev server Vite tidak mengenali class Tailwind di file/folder Blade baru, `touch resources/css/app.css`.
+
+### Checklist uji Tahap 3 (semua ✅)
 1. Beranda: grid artikel Published, search, pagination
 2. Detail artikel publik tanpa tombol edit/hapus
 3. Login `admin@example.com` / `password` → dashboard + 3 statistik
@@ -131,8 +143,9 @@ php artisan migrate:fresh --seed   # reset database + data dummy
 11. User lain membuka `/dashboard/articles/{slug-milik-admin}/edit` → **403**
 12. Belum login membuka `/dashboard` → redirect ke login
 
-### Tahap 4 (berikutnya)
-- Jalankan & perbaiki semua checklist di atas.
+### Tahap 4
+- [x] Jalankan & perbaiki semua checklist di atas.
+- [x] Perbaikan kecil: timezone WIB, halaman 403 Bahasa Indonesia, email reset Bahasa Indonesia.
 - Cocokkan fitur dengan rubrik Soal 1 & Soal 2 satu per satu.
 - (Opsional) Feature test sederhana dengan PHPUnit/Pest untuk auth, authorization, dan query Soal 2.
 - `npm run build` sebelum dikumpulkan.
