@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+
+@layer components {
+    .card            { @apply rounded-xl border border-gray-200 bg-white shadow-sm; }
+
+    .btn             { @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2; }
+    .btn-sm          { @apply px-3 py-1.5 text-xs; }
+    .btn-primary     { @apply bg-indigo-600 text-white hover:bg-indigo-700 focus-visible:ring-indigo-500; }
+    .btn-secondary   { @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-400; }
+    .btn-danger      { @apply border border-red-200 bg-white text-red-600 hover:bg-red-50 focus-visible:ring-red-400; }
+
+    .form-label      { @apply mb-1 block text-sm font-medium text-gray-700; }
+    .form-input      { @apply block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none; }
+    .form-input-error{ @apply border-red-500 focus:border-red-500 focus:ring-red-500/20; }
+    .form-error      { @apply mt-1 text-sm text-red-600; }
+
+    .badge           { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
+    .link            { @apply font-medium text-indigo-600 hover:text-indigo-500; }
+
+    .nav-link        { @apply rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900; }
+    .nav-link-active { @apply bg-indigo-50 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-700; }
+
+    .th              { @apply px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase; }
+    .td              { @apply px-4 py-3 text-sm; }
+
+    .article-content { @apply leading-relaxed whitespace-pre-line text-gray-700; }
+}
