@@ -101,7 +101,6 @@ class ArticleAuthorizationTest extends TestCase
 
     public function test_user_id_comes_from_logged_in_user_not_from_form(): void
     {
-        // coba sisipkan user_id orang lain lewat form
         $this->actingAs($this->owner)
             ->post(route('articles.store'), $this->validPayload(['user_id' => $this->otherUser->id]));
 

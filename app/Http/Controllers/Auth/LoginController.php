@@ -14,7 +14,6 @@ class LoginController extends Controller
 {
     public function create(): View
     {
-        // 3 artikel terbaru untuk panel kiri halaman login
         $latestArticles = Article::published()->with('user:id,name')->latest()->take(3)->get();
 
         return view('auth.login', compact('latestArticles'));
@@ -28,13 +27,11 @@ class LoginController extends Controller
         ]);
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            // sengaja tidak dibedakan email/password yang salah
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
-        // cegah session fixation
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard'));

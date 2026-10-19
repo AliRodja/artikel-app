@@ -34,7 +34,6 @@ class ArticleReportTest extends TestCase
     {
         $author = User::factory()->create();
         Article::factory()->for($author)->published()->create(['title' => 'Punya Penulis']);
-        // published tapi tanpa penulis
         Article::factory()->published()->create(['user_id' => null, 'title' => 'Tanpa Penulis']);
 
         $titles = $this->reportTitles();
@@ -97,14 +96,13 @@ class ArticleReportTest extends TestCase
         Article::factory()->for($budi)->published()->create(['title' => 'Belajar Laravel']);
         Article::factory()->for($ani)->published()->create(['title' => 'Resep Nasi Goreng']);
 
-        $this->assertSame(['Belajar Laravel'], $this->reportTitles(['search' => 'laravel']));   // judul
-        $this->assertSame(['Resep Nasi Goreng'], $this->reportTitles(['search' => 'Ani']));     // nama penulis
-        $this->assertSame(['Resep Nasi Goreng'], $this->reportTitles(['search' => 'kampus']));  // email penulis
+        $this->assertSame(['Belajar Laravel'], $this->reportTitles(['search' => 'laravel']));
+        $this->assertSame(['Resep Nasi Goreng'], $this->reportTitles(['search' => 'Ani']));
+        $this->assertSame(['Resep Nasi Goreng'], $this->reportTitles(['search' => 'kampus']));
     }
 
     public function test_search_does_not_leak_draft_articles(): void
     {
-        // orWhere di search tidak boleh membocorkan draft
         $budi = User::factory()->create(['name' => 'Budi']);
         Article::factory()->for($budi)->published()->create(['title' => 'Published Budi']);
         Article::factory()->for($budi)->draft()->create(['title' => 'Draft Budi']);

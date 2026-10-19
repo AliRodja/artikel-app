@@ -14,9 +14,7 @@ class PublicArticleController extends Controller
 
         $articles = Article::query()
             ->published()
-            // eager load penulis, hindari N+1
             ->with('user:id,name')
-            // dibungkus closure supaya draft tidak ikut lolos lewat orWhere
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('title', 'like', "%{$search}%")
@@ -32,7 +30,6 @@ class PublicArticleController extends Controller
 
     public function show(Article $article): View
     {
-        // draft tidak boleh dibuka publik
         abort_unless($article->isPublished(), 404);
 
         $article->load('user:id,name');

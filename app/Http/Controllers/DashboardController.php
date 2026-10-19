@@ -11,7 +11,6 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        // articles() dipanggil ulang tiap baris, kalau builder-nya dipakai bareng where-nya numpuk
         return view('dashboard', [
             'totalCount' => $user->articles()->count(),
             'publishedCount' => $user->articles()->published()->count(),

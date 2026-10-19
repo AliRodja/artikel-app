@@ -19,7 +19,6 @@ class ArticleController extends Controller
 
         $articles = $request->user()->articles()
             ->when($search !== '', fn ($query) => $query->where('title', 'like', "%{$search}%"))
-            // selain 0/1 diabaikan
             ->when(in_array($status, ['0', '1'], true), fn ($query) => $query->where('status', (int) $status))
             ->latest()
             ->paginate(10)
@@ -41,7 +40,6 @@ class ArticleController extends Controller
             $data['image'] = $request->file('image')->store('articles', 'public');
         }
 
-        // user_id diisi lewat relasi, bukan dari input form
         $article = $request->user()->articles()->create($data);
 
         return redirect()->route('articles.show', $article)->with('success', 'Artikel berhasil dibuat.');
@@ -68,7 +66,6 @@ class ArticleController extends Controller
         $data = $request->safe()->except(['image', 'remove_image']);
 
         if ($request->hasFile('image')) {
-            // hapus file lama biar tidak numpuk di storage
             $this->deleteImage($article);
             $data['image'] = $request->file('image')->store('articles', 'public');
         } elseif ($request->boolean('remove_image')) {

@@ -25,7 +25,6 @@ class RegisterController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
-        // password di-hash otomatis lewat cast 'hashed' di model User
         $user = User::create($validated);
 
         Auth::login($user);

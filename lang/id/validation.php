@@ -1,6 +1,5 @@
 <?php
 
-// cuma aturan yang dipakai, sisanya fallback ke bahasa Inggris
 return [
     'boolean' => ':Attribute harus bernilai benar atau salah.',
     'confirmed' => 'Konfirmasi :attribute tidak cocok.',

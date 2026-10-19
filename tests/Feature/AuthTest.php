@@ -37,7 +37,7 @@ class AuthTest extends TestCase
 
         $response = $this->from('/register')->post('/register', [
             'name' => '',
-            'email' => 'budi@example.com', // sudah terdaftar
+            'email' => 'budi@example.com',
             'password' => 'rahasia123',
             'password_confirmation' => 'beda12345',
         ]);
@@ -50,7 +50,7 @@ class AuthTest extends TestCase
 
     public function test_user_can_login_with_correct_credentials(): void
     {
-        $user = User::factory()->create(); // password default factory: "password"
+        $user = User::factory()->create();
 
         $response = $this->post('/login', [
             'email' => $user->email,
@@ -79,7 +79,6 @@ class AuthTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // throttle:5,1, request ke-6 kena 429
         for ($i = 0; $i < 5; $i++) {
             $this->post('/login', ['email' => $user->email, 'password' => 'salah']);
         }
@@ -116,7 +115,6 @@ class AuthTest extends TestCase
 
         $this->post('/forgot-password', ['email' => $user->email]);
 
-        // token asli cuma ada di notifikasi, di DB yang disimpan hash-nya
         $token = null;
         Notification::assertSentTo($user, ResetPassword::class, function (ResetPassword $notification) use (&$token) {
             $token = $notification->token;
@@ -135,7 +133,6 @@ class AuthTest extends TestCase
         $this->assertTrue(Hash::check('passwordbaru123', $user->fresh()->password));
         $this->assertDatabaseMissing('password_reset_tokens', ['email' => $user->email]);
 
-        // token yang sama dipakai lagi
         $this->post('/reset-password', $payload)->assertSessionHasErrors('email');
     }
 
@@ -150,7 +147,7 @@ class AuthTest extends TestCase
             'password_confirmation' => 'passwordbaru123',
         ])->assertSessionHasErrors('email');
 
-        $this->assertTrue(Hash::check('password', $user->fresh()->password)); // password lama tidak berubah
+        $this->assertTrue(Hash::check('password', $user->fresh()->password));
     }
 
     public function test_guest_is_redirected_to_login_from_dashboard(): void

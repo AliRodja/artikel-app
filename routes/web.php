@@ -10,11 +10,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PublicArticleController;
 use Illuminate\Support\Facades\Route;
 
-// publik
 Route::get('/', [PublicArticleController::class, 'index'])->name('home');
 Route::get('/artikel/{article}', [PublicArticleController::class, 'show'])->name('public.articles.show');
 
-// khusus tamu
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store']);
@@ -27,12 +25,10 @@ Route::middleware('guest')->group(function () {
         ->middleware('throttle:5,1')
         ->name('password.email');
 
-    // nama password.reset jangan diganti, dipakai notifikasi reset password bawaan Laravel
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
 });
 
-// harus login
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 

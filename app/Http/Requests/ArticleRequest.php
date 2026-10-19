@@ -8,7 +8,6 @@ use Illuminate\Validation\Rule;
 
 class ArticleRequest extends FormRequest
 {
-    // kepemilikan artikel dicek di ArticlePolicy
     public function authorize(): bool
     {
         return true;
@@ -19,7 +18,6 @@ class ArticleRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            // max dalam KB (2 MB)
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'status' => ['required', Rule::in([Article::STATUS_DRAFT, Article::STATUS_PUBLISHED])],
             'remove_image' => ['nullable', 'boolean'],

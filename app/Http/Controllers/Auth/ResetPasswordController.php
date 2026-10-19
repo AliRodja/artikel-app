@@ -30,13 +30,12 @@ class ResetPasswordController extends Controller
             'password' => ['required', 'confirmed', PasswordRule::min(8)],
         ]);
 
-        // token langsung dihapus setelah dipakai, jadi link cuma bisa sekali pakai
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
                     'password' => $password,
-                    'remember_token' => Str::random(60), // sesi remember me yang lama jadi tidak berlaku
+                    'remember_token' => Str::random(60),
                 ])->save();
 
                 event(new PasswordReset($user));

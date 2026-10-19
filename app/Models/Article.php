@@ -47,7 +47,6 @@ class Article extends Model
         return $this->status === self::STATUS_PUBLISHED;
     }
 
-    // slug cuma dibuat sekali saat create, biar URL lama tidak rusak kalau judul diedit
     protected static function booted(): void
     {
         static::creating(function (Article $article) {
@@ -57,7 +56,6 @@ class Article extends Model
         });
     }
 
-    // judul kembar jadi judul-2, judul-3, dst.
     public static function generateUniqueSlug(string $title): string
     {
         $base = Str::slug($title) ?: 'artikel';
@@ -71,7 +69,6 @@ class Article extends Model
         return $slug;
     }
 
-    // butuh php artisan storage:link
     public function getImageUrlAttribute(): ?string
     {
         return $this->image ? asset('storage/'.$this->image) : null;

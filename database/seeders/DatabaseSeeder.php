@@ -13,12 +13,11 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name' => 'Admin Demo',
             'email' => 'admin@example.com',
-            // password: password (default UserFactory)
         ]);
 
-        Article::factory(20)->for($admin)->create();  
-        Article::factory(10)->create();               
-        
+        Article::factory(20)->for($admin)->create();
+        Article::factory(10)->create();
+
         Article::factory(3)->create([
             'user_id' => null,
             'status' => Article::STATUS_PUBLISHED,

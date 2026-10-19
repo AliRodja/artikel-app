@@ -21,7 +21,6 @@ class ForgotPasswordController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // MAIL_MAILER=log, link reset ada di storage/logs/laravel.log
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT

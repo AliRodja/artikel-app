@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-// Soal 2 - laporan artikel (INNER JOIN articles & users)
 class ArticleReportController extends Controller
 {
     public function __invoke(Request $request): View
@@ -15,9 +14,7 @@ class ArticleReportController extends Controller
         $search = trim((string) $request->query('search'));
 
         $articles = DB::table('articles')
-            // inner join: artikel tanpa penulis (user_id null) otomatis tidak ikut
             ->join('users', 'articles.user_id', '=', 'users.id')
-            // pakai prefix tabel, id & created_at ada di kedua tabel
             ->select([
                 'articles.id',
                 'articles.title',
@@ -28,7 +25,6 @@ class ArticleReportController extends Controller
                 'users.email as author_email',
             ])
             ->where('articles.status', Article::STATUS_PUBLISHED)
-            // dibungkus closure supaya OR tidak lolos dari filter status
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('articles.title', 'like', "%{$search}%")
