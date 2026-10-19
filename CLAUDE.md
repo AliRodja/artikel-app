@@ -146,7 +146,8 @@ Jika dev server Vite tidak mengenali class Tailwind di file/folder Blade baru, `
 ### Tahap 4
 - [x] Jalankan & perbaiki semua checklist di atas.
 - [x] Perbaikan kecil: timezone WIB, halaman 403 Bahasa Indonesia, email reset Bahasa Indonesia.
-- Cocokkan fitur dengan rubrik Soal 1 & Soal 2 satu per satu.
+- [x] Cocokkan fitur dengan rubrik Soal 1 & Soal 2 satu per satu (+ uji register & ganti gambar) → README bagian 5.
+- [x] README untuk penilai: fitur vs rubrik, bukti INNER JOIN, struktur database, route, keputusan desain.
 - (Opsional) Feature test sederhana dengan PHPUnit/Pest untuk auth, authorization, dan query Soal 2.
 - `npm run build` sebelum dikumpulkan.
 - **README.md** untuk penilai: requirement (PHP, Composer, MySQL, Node), langkah instalasi
