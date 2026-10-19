@@ -13,13 +13,13 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name' => 'Admin Demo',
             'email' => 'admin@example.com',
-            // password default dari UserFactory: "password"
+            // password: password (default UserFactory)
         ]);
 
         Article::factory(20)->for($admin)->create();  // artikel milik akun demo
         Article::factory(10)->create();               // artikel milik user lain
-        // Artikel tanpa penulis → uji INNER JOIN Soal 2. Sengaja Published: kalau Draft, artikel ini sudah
-        // tersaring oleh WHERE status = 1 sehingga tidak membuktikan bahwa JOIN-lah yang membuangnya.
+        // artikel tanpa penulis buat ngetes INNER JOIN Soal 2, sengaja published
+        // supaya tidak kebuang duluan oleh filter status
         Article::factory(3)->create([
             'user_id' => null,
             'status' => Article::STATUS_PUBLISHED,

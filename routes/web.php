@@ -10,16 +10,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PublicArticleController;
 use Illuminate\Support\Facades\Route;
 
-/*
-| Halaman publik — bisa dibuka siapa saja (hanya artikel Published).
-*/
+// publik
 Route::get('/', [PublicArticleController::class, 'index'])->name('home');
 Route::get('/artikel/{article}', [PublicArticleController::class, 'show'])->name('public.articles.show');
 
-/*
-| Khusus tamu (belum login). User yang sudah login otomatis
-| diarahkan ke route "dashboard" oleh middleware guest.
-*/
+// khusus tamu
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store']);
@@ -32,14 +27,12 @@ Route::middleware('guest')->group(function () {
         ->middleware('throttle:5,1')
         ->name('password.email');
 
-    // Nama "password.reset" wajib persis: dipakai notifikasi ResetPassword bawaan Laravel untuk membuat link di email.
+    // nama password.reset jangan diganti, dipakai notifikasi reset password bawaan Laravel
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
 });
 
-/*
-| Khusus user login. Tamu yang mengakses diarahkan ke route "login" oleh middleware auth.
-*/
+// harus login
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 

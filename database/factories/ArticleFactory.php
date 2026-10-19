@@ -24,7 +24,6 @@ class ArticleFactory extends Factory
         ];
     }
 
-    // State: Article::factory()->published()->create() — dipakai test agar status tidak acak.
     public function published(): static
     {
         return $this->state(['status' => Article::STATUS_PUBLISHED]);

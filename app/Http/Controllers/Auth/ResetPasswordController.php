@@ -16,7 +16,6 @@ class ResetPasswordController extends Controller
 {
     public function create(Request $request, string $token): View
     {
-        // Link dari email berbentuk /reset-password/{token}?email=...
         return view('auth.reset-password', [
             'token' => $token,
             'email' => $request->query('email'),
@@ -31,14 +30,13 @@ class ResetPasswordController extends Controller
             'password' => ['required', 'confirmed', PasswordRule::min(8)],
         ]);
 
-        // Broker mengecek: email terdaftar, token cocok & belum kedaluwarsa (60 menit, config/auth.php).
-        // Jika valid, closure dijalankan lalu token dihapus sehingga link tidak bisa dipakai ulang.
+        // token langsung dihapus setelah dipakai, jadi link cuma bisa sekali pakai
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => $password, // di-hash otomatis oleh cast 'hashed'
-                    'remember_token' => Str::random(60), // keluarkan sesi "remember me" lama
+                    'password' => $password,
+                    'remember_token' => Str::random(60), // sesi remember me yang lama jadi tidak berlaku
                 ])->save();
 
                 event(new PasswordReset($user));

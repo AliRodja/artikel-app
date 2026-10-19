@@ -7,13 +7,11 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    // Invokable: controller dengan satu aksi saja, dipanggil lewat __invoke().
     public function __invoke(Request $request): View
     {
         $user = $request->user();
 
-        // Setiap statistik memanggil $user->articles() baru, karena query builder bersifat mutable:
-        // memakai satu builder untuk published() lalu draft() akan menumpuk kedua kondisi WHERE.
+        // articles() dipanggil ulang tiap baris, kalau builder-nya dipakai bareng where-nya numpuk
         return view('dashboard', [
             'totalCount' => $user->articles()->count(),
             'publishedCount' => $user->articles()->published()->count(),

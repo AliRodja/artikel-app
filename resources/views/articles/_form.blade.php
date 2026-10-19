@@ -1,4 +1,4 @@
-{{-- Field form artikel, dipakai bersama oleh create & edit. $article = null saat create. --}}
+{{-- dipakai di create & edit --}}
 @php($article ??= null)
 
 <x-input name="title" label="Judul" :value="$article?->title" required maxlength="255" />
@@ -14,7 +14,7 @@
 
 <div class="mb-4">
     <label for="status" class="form-label">Status</label>
-    {{-- old() bernilai string dari request sebelumnya, maka dibandingkan sebagai string. --}}
+    {{-- old() selalu string --}}
     @php($currentStatus = (string) old('status', $article?->status ?? \App\Models\Article::STATUS_DRAFT))
     <select id="status" name="status" @class(['form-input', 'form-input-error' => $errors->has('status')])>
         <option value="{{ \App\Models\Article::STATUS_DRAFT }}" @selected($currentStatus === '0')>Draft</option>
@@ -44,13 +44,12 @@
         <p class="form-error">{{ $message }}</p>
     @enderror
 
-    {{-- Preview gambar yang baru dipilih (sebelum diunggah). --}}
     <img id="image-preview" alt="Preview gambar" class="mt-3 hidden h-40 rounded-lg object-cover">
 </div>
 
 @push('scripts')
     <script>
-        // URL.createObjectURL membuat URL sementara dari file lokal sehingga gambar bisa ditampilkan tanpa upload.
+        // preview gambar sebelum upload
         document.getElementById('image').addEventListener('change', function (event) {
             const preview = document.getElementById('image-preview');
             const file = event.target.files[0];

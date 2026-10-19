@@ -9,14 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
-// Feature test: mensimulasikan request HTTP sungguhan (GET/POST) ke aplikasi, lalu memeriksa respons & database.
-// RefreshDatabase: menjalankan migration di database test (SQLite in-memory, lihat phpunit.xml) dan
-// membungkus tiap test dalam transaksi yang di-rollback → setiap test mulai dari database bersih.
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
-
-    // ---------- Register ----------
 
     public function test_user_can_register_and_is_logged_in(): void
     {
@@ -32,7 +27,6 @@ class AuthTest extends TestCase
 
         $user = User::where('email', 'budi@example.com')->first();
         $this->assertNotNull($user);
-        // Password tidak disimpan sebagai teks asli, melainkan hash yang cocok dengan Hash::check().
         $this->assertNotSame('rahasia123', $user->password);
         $this->assertTrue(Hash::check('rahasia123', $user->password));
     }
@@ -53,8 +47,6 @@ class AuthTest extends TestCase
         $this->assertGuest();
         $this->assertDatabaseCount('users', 1);
     }
-
-    // ---------- Login & Logout ----------
 
     public function test_user_can_login_with_correct_credentials(): void
     {
@@ -87,7 +79,7 @@ class AuthTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // Middleware throttle:5,1 → maksimal 5 request per menit; request ke-6 ditolak 429 Too Many Requests.
+        // throttle:5,1, request ke-6 kena 429
         for ($i = 0; $i < 5; $i++) {
             $this->post('/login', ['email' => $user->email, 'password' => 'salah']);
         }
@@ -105,11 +97,8 @@ class AuthTest extends TestCase
         $this->assertGuest();
     }
 
-    // ---------- Lupa & Reset Password ----------
-
     public function test_reset_link_is_sent_to_registered_email(): void
     {
-        // Notification::fake(): notifikasi tidak benar-benar dikirim, hanya dicatat agar bisa diperiksa.
         Notification::fake();
         $user = User::factory()->create();
 
@@ -127,7 +116,7 @@ class AuthTest extends TestCase
 
         $this->post('/forgot-password', ['email' => $user->email]);
 
-        // Ambil token asli dari notifikasi (di database yang tersimpan hanya hash-nya).
+        // token asli cuma ada di notifikasi, di DB yang disimpan hash-nya
         $token = null;
         Notification::assertSentTo($user, ResetPassword::class, function (ResetPassword $notification) use (&$token) {
             $token = $notification->token;
@@ -146,7 +135,7 @@ class AuthTest extends TestCase
         $this->assertTrue(Hash::check('passwordbaru123', $user->fresh()->password));
         $this->assertDatabaseMissing('password_reset_tokens', ['email' => $user->email]);
 
-        // Token yang sama dipakai lagi → ditolak.
+        // token yang sama dipakai lagi
         $this->post('/reset-password', $payload)->assertSessionHasErrors('email');
     }
 
@@ -164,8 +153,6 @@ class AuthTest extends TestCase
         $this->assertTrue(Hash::check('password', $user->fresh()->password)); // password lama tidak berubah
     }
 
-    // ---------- Middleware auth & guest ----------
-
     public function test_guest_is_redirected_to_login_from_dashboard(): void
     {
         $this->get('/dashboard')->assertRedirect(route('login'));
@@ -177,7 +164,6 @@ class AuthTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // Middleware guest mengarahkan user yang sudah login ke dashboard.
         $this->actingAs($user)->get('/login')->assertRedirect(route('dashboard'));
         $this->actingAs($user)->get('/register')->assertRedirect(route('dashboard'));
     }

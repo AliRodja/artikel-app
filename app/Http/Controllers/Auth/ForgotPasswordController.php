@@ -21,9 +21,7 @@ class ForgotPasswordController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // Password broker: membuat token (disimpan ter-hash di tabel password_reset_tokens)
-        // lalu mengirim notifikasi berisi link route('password.reset', token).
-        // Dengan MAIL_MAILER=log, email-nya ditulis ke storage/logs/laravel.log.
+        // MAIL_MAILER=log, link reset ada di storage/logs/laravel.log
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT

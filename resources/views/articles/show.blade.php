@@ -16,7 +16,6 @@
                 </p>
             </div>
 
-            {{-- Halaman ini hanya bisa dibuka pemilik (ArticlePolicy@view), jadi tombol kelola aman ditampilkan. --}}
             <div class="flex gap-2">
                 @if ($article->isPublished())
                     <a href="{{ route('public.articles.show', $article) }}" class="btn btn-secondary btn-sm" target="_blank">Lihat publik</a>

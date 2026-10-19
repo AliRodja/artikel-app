@@ -10,19 +10,16 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-// Resource controller: 7 aksi standar (index, create, store, show, edit, update, destroy)
-// yang dipetakan otomatis oleh Route::resource('articles', ...) di routes/web.php.
 class ArticleController extends Controller
 {
-    // Daftar artikel MILIK user yang login, dengan search judul + filter status.
     public function index(Request $request): View
     {
         $search = trim((string) $request->query('search'));
-        $status = $request->query('status'); // '' / null = semua, '0' = Draft, '1' = Published
+        $status = $request->query('status');
 
         $articles = $request->user()->articles()
             ->when($search !== '', fn ($query) => $query->where('title', 'like', "%{$search}%"))
-            // in_array: hanya terima '0' atau '1' agar nilai aneh dari URL diabaikan.
+            // selain 0/1 diabaikan
             ->when(in_array($status, ['0', '1'], true), fn ($query) => $query->where('status', (int) $status))
             ->latest()
             ->paginate(10)
@@ -38,24 +35,21 @@ class ArticleController extends Controller
 
     public function store(ArticleRequest $request): RedirectResponse
     {
-        // safe()->except(): ambil data yang lolos validasi, kecuali field yang diolah manual.
         $data = $request->safe()->except(['image', 'remove_image']);
 
         if ($request->hasFile('image')) {
-            // Simpan ke storage/app/public/articles dengan nama acak; yang disimpan di DB hanya path-nya.
             $data['image'] = $request->file('image')->store('articles', 'public');
         }
 
-        // Lewat relasi: user_id otomatis diisi id user yang login, tidak pernah dari input form.
+        // user_id diisi lewat relasi, bukan dari input form
         $article = $request->user()->articles()->create($data);
 
         return redirect()->route('articles.show', $article)->with('success', 'Artikel berhasil dibuat.');
     }
 
-    // Route model binding: {article} di URL (slug) otomatis diubah jadi objek Article, 404 jika tidak ada.
     public function show(Article $article): View
     {
-        Gate::authorize('view', $article); // bukan pemilik → 403
+        Gate::authorize('view', $article);
 
         return view('articles.show', compact('article'));
     }
@@ -74,7 +68,7 @@ class ArticleController extends Controller
         $data = $request->safe()->except(['image', 'remove_image']);
 
         if ($request->hasFile('image')) {
-            // Ganti gambar: hapus file lama dulu agar tidak menumpuk file yatim di storage.
+            // hapus file lama biar tidak numpuk di storage
             $this->deleteImage($article);
             $data['image'] = $request->file('image')->store('articles', 'public');
         } elseif ($request->boolean('remove_image')) {
@@ -97,7 +91,6 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Artikel berhasil dihapus.');
     }
 
-    // Dipakai di update() & destroy() agar logika hapus file tidak ditulis berulang.
     private function deleteImage(Article $article): void
     {
         if ($article->image) {

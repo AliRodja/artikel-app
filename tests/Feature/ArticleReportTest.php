@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-// Soal 2: halaman Laporan Artikel (INNER JOIN articles × users, status = 1, terbaru dulu, 10 per halaman, search).
 class ArticleReportTest extends TestCase
 {
     use RefreshDatabase;
@@ -21,7 +20,6 @@ class ArticleReportTest extends TestCase
         $this->viewer = User::factory()->create(['name' => 'Penilai']);
     }
 
-    // Judul artikel yang dikirim controller ke view, sesuai urutan tampil.
     private function reportTitles(array $query = []): array
     {
         return $this->actingAs($this->viewer)
@@ -36,7 +34,7 @@ class ArticleReportTest extends TestCase
     {
         $author = User::factory()->create();
         Article::factory()->for($author)->published()->create(['title' => 'Punya Penulis']);
-        // Sama-sama Published, tapi user_id NULL → tidak punya pasangan di tabel users.
+        // published tapi tanpa penulis
         Article::factory()->published()->create(['user_id' => null, 'title' => 'Tanpa Penulis']);
 
         $titles = $this->reportTitles();
@@ -61,7 +59,6 @@ class ArticleReportTest extends TestCase
 
         $row = $this->actingAs($this->viewer)->get(route('articles.report'))->viewData('articles')->first();
 
-        // Kolom hasil JOIN: author_name & author_email berasal dari tabel users.
         $this->assertSame($article->title, $row->title);
         $this->assertSame('Siti Penulis', $row->author_name);
         $this->assertSame('siti@example.com', $row->author_email);
@@ -107,8 +104,7 @@ class ArticleReportTest extends TestCase
 
     public function test_search_does_not_leak_draft_articles(): void
     {
-        // Jebakan orWhere: tanpa closure, query menjadi "status = 1 AND title LIKE ? OR name LIKE ?"
-        // sehingga Draft milik penulis yang namanya cocok ikut lolos lewat OR.
+        // orWhere di search tidak boleh membocorkan draft
         $budi = User::factory()->create(['name' => 'Budi']);
         Article::factory()->for($budi)->published()->create(['title' => 'Published Budi']);
         Article::factory()->for($budi)->draft()->create(['title' => 'Draft Budi']);
@@ -124,7 +120,6 @@ class ArticleReportTest extends TestCase
             ->get(route('articles.report', ['search' => 'Budi']))
             ->viewData('articles');
 
-        // withQueryString(): link halaman berikutnya tetap membawa ?search=Budi.
         $this->assertStringContainsString('search=Budi', $paginator->nextPageUrl());
     }
 

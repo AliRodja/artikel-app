@@ -11,7 +11,6 @@
         <a href="{{ route('articles.create') }}" class="btn btn-primary">+ Tulis Artikel</a>
     </div>
 
-    {{-- Form GET: filter masuk ke URL (?search=...&status=...) sehingga bisa dibagikan & ikut terbawa pagination. --}}
     <form action="{{ route('articles.index') }}" method="GET" class="card mb-6 flex flex-wrap gap-3 p-4">
         <input type="search" name="search" value="{{ $search }}" placeholder="Cari judul..." class="form-input flex-1">
         <select name="status" class="form-input w-auto">
@@ -52,7 +51,6 @@
                                 <td class="td">
                                     <div class="flex justify-end gap-2">
                                         <a href="{{ route('articles.edit', $article) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                        {{-- HTML form hanya kenal GET/POST; @method('DELETE') menambah field _method agar Laravel memprosesnya sebagai DELETE. --}}
                                         <form action="{{ route('articles.destroy', $article) }}" method="POST"
                                               onsubmit="return confirm('Hapus artikel ini? Tindakan ini tidak bisa dibatalkan.')">
                                             @csrf

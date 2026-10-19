@@ -45,16 +45,15 @@
                     <tbody class="divide-y divide-gray-100">
                         @foreach ($articles as $article)
                             <tr>
-                                {{-- firstItem() = nomor urut baris pertama di halaman ini (halaman 2 mulai dari 11). --}}
                                 <td class="td text-gray-500">{{ $articles->firstItem() + $loop->index }}</td>
                                 <td class="td font-medium text-gray-900">
-                                    {{-- $article berupa stdClass (bukan model), jadi slug dikirim langsung sebagai parameter route. --}}
+                                    {{-- hasil DB::table berupa stdClass, jadi slug dikirim langsung --}}
                                     <a href="{{ route('public.articles.show', $article->slug) }}" class="hover:text-indigo-600">{{ $article->title }}</a>
                                 </td>
                                 <td class="td">{{ $article->author_name }}</td>
                                 <td class="td text-gray-600">{{ $article->author_email }}</td>
                                 <td class="td"><x-status-badge :status="$article->status" /></td>
-                                {{-- Query Builder tidak melakukan cast tanggal seperti Eloquent: created_at masih string, di-parse dengan Carbon. --}}
+                                {{-- created_at masih string, tidak di-cast seperti di Eloquent --}}
                                 <td class="td whitespace-nowrap text-gray-500">{{ \Illuminate\Support\Carbon::parse($article->created_at)->format('d M Y H:i') }}</td>
                             </tr>
                         @endforeach

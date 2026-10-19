@@ -47,8 +47,7 @@ class Article extends Model
         return $this->status === self::STATUS_PUBLISHED;
     }
 
-    // Slug dibuat otomatis HANYA saat artikel baru dibuat (event "creating").
-    // Saat judul diedit slug tidak berubah, agar URL lama yang sudah dibagikan tidak rusak.
+    // slug cuma dibuat sekali saat create, biar URL lama tidak rusak kalau judul diedit
     protected static function booted(): void
     {
         static::creating(function (Article $article) {
@@ -58,7 +57,7 @@ class Article extends Model
         });
     }
 
-    // "Judul Sama" → judul-sama, judul-sama-2, judul-sama-3, ... (kolom slug bersifat unique).
+    // judul kembar jadi judul-2, judul-3, dst.
     public static function generateUniqueSlug(string $title): string
     {
         $base = Str::slug($title) ?: 'artikel';
@@ -72,13 +71,12 @@ class Article extends Model
         return $slug;
     }
 
-    // Accessor: $article->image_url → URL publik gambar (butuh `php artisan storage:link`), null jika tidak ada.
+    // butuh php artisan storage:link
     public function getImageUrlAttribute(): ?string
     {
         return $this->image ? asset('storage/'.$this->image) : null;
     }
 
-    // Accessor: $article->excerpt → potongan isi untuk kartu daftar artikel.
     public function getExcerptAttribute(): string
     {
         return Str::limit(strip_tags($this->content), 140);

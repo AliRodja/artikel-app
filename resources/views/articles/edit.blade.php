@@ -9,7 +9,6 @@
 
         <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data" class="card p-6">
             @csrf
-            {{-- Route update menerima PUT; browser mengirim POST + field _method=PUT. --}}
             @method('PUT')
 
             @include('articles._form', ['article' => $article])

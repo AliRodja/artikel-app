@@ -6,7 +6,6 @@
     <x-auth-card title="Reset Password" subtitle="Buat password baru untuk akun Anda.">
         <form action="{{ route('password.update') }}" method="POST">
             @csrf
-            {{-- Token dari URL dikirim ulang lewat hidden input agar bisa diverifikasi oleh password broker. --}}
             <input type="hidden" name="token" value="{{ $token }}">
 
             <x-input name="email" label="Email" type="email" :value="$email" required autocomplete="email" />

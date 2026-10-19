@@ -1,6 +1,6 @@
 <?php
 
-// Hanya aturan yang dipakai aplikasi ini; kunci lain otomatis jatuh ke bahasa Inggris (fallback_locale).
+// cuma aturan yang dipakai, sisanya fallback ke bahasa Inggris
 return [
     'boolean' => ':Attribute harus bernilai benar atau salah.',
     'confirmed' => 'Konfirmasi :attribute tidak cocok.',

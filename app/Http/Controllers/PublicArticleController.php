@@ -14,10 +14,9 @@ class PublicArticleController extends Controller
 
         $articles = Article::query()
             ->published()
-            // Eager loading: penulis semua artikel diambil dalam 1 query tambahan (mencegah N+1 query).
+            // eager load penulis, hindari N+1
             ->with('user:id,name')
-            // Kondisi search dibungkus closure → WHERE status = 1 AND (title LIKE ? OR content LIKE ?).
-            // Tanpa closure, orWhere akan ikut menampilkan artikel Draft yang cocok dengan kata kunci.
+            // dibungkus closure supaya draft tidak ikut lolos lewat orWhere
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('title', 'like', "%{$search}%")
@@ -26,15 +25,14 @@ class PublicArticleController extends Controller
             })
             ->latest()
             ->paginate(9)
-            ->withQueryString(); // kata kunci search tetap terbawa saat pindah halaman
+            ->withQueryString();
 
         return view('public.index', compact('articles', 'search'));
     }
 
-    // Route model binding: {article} dicari lewat kolom slug (getRouteKeyName di model).
     public function show(Article $article): View
     {
-        // Draft tidak boleh diakses publik walaupun slug-nya diketahui.
+        // draft tidak boleh dibuka publik
         abort_unless($article->isPublished(), 404);
 
         $article->load('user:id,name');

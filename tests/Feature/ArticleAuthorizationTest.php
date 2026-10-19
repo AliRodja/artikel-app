@@ -7,10 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-// Menguji dua lapis pengamanan artikel:
-//   1. Middleware auth  → "sudah login?"            (gagal: redirect ke login)
-//   2. ArticlePolicy    → "artikel ini milikmu?"     (gagal: 403 Forbidden)
-// serta batasan halaman publik (hanya Published, tanpa aksi kelola).
 class ArticleAuthorizationTest extends TestCase
 {
     use RefreshDatabase;
@@ -39,8 +35,6 @@ class ArticleAuthorizationTest extends TestCase
         ], $overrides);
     }
 
-    // ---------- Pemilik ----------
-
     public function test_owner_can_view_edit_update_and_delete_own_article(): void
     {
         $this->actingAs($this->owner);
@@ -55,8 +49,6 @@ class ArticleAuthorizationTest extends TestCase
         $this->delete(route('articles.destroy', $this->article))->assertRedirect(route('articles.index'));
         $this->assertModelMissing($this->article);
     }
-
-    // ---------- User lain → 403 ----------
 
     public function test_other_user_cannot_view_or_edit_article(): void
     {
@@ -97,8 +89,6 @@ class ArticleAuthorizationTest extends TestCase
             ->assertDontSee($othersArticle->title);
     }
 
-    // ---------- Tamu → redirect login ----------
-
     public function test_guest_cannot_access_article_management(): void
     {
         $this->get(route('articles.create'))->assertRedirect(route('login'));
@@ -109,19 +99,15 @@ class ArticleAuthorizationTest extends TestCase
         $this->assertDatabaseCount('articles', 1);
     }
 
-    // ---------- Mass assignment ----------
-
     public function test_user_id_comes_from_logged_in_user_not_from_form(): void
     {
-        // Penyerang mencoba menyisipkan user_id milik orang lain lewat input form.
+        // coba sisipkan user_id orang lain lewat form
         $this->actingAs($this->owner)
             ->post(route('articles.store'), $this->validPayload(['user_id' => $this->otherUser->id]));
 
         $created = Article::where('title', 'Judul Baru')->firstOrFail();
         $this->assertSame($this->owner->id, $created->user_id);
     }
-
-    // ---------- Halaman publik ----------
 
     public function test_public_can_see_published_article_but_not_draft(): void
     {
@@ -133,7 +119,6 @@ class ArticleAuthorizationTest extends TestCase
             ->assertDontSee($draft->title);
 
         $this->get(route('public.articles.show', $this->article))->assertOk();
-        // Draft tidak boleh dibuka publik walaupun slug-nya diketahui.
         $this->get(route('public.articles.show', $draft))->assertNotFound();
     }
 

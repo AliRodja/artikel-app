@@ -55,7 +55,6 @@
             @endforeach
         </div>
 
-        {{-- Memakai view pagination Tailwind bawaan Laravel. --}}
         <div class="mt-8">{{ $articles->links() }}</div>
     @endif
 @endsection

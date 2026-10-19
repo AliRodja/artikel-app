@@ -16,7 +16,6 @@
             <img src="{{ $article->image_url }}" alt="{{ $article->title }}" class="mt-6 w-full rounded-xl object-cover">
         @endif
 
-        {{-- Halaman publik hanya untuk membaca: sengaja tidak ada tombol edit/hapus. --}}
         <div class="card article-content mt-6 p-6 sm:p-8">{{ $article->content }}</div>
     </article>
 @endsection

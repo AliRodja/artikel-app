@@ -23,18 +23,16 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Auth::attempt mencari user berdasarkan email lalu mencocokkan password dengan Hash::check().
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            // Pesan sengaja umum: tidak membocorkan apakah email terdaftar atau passwordnya yang salah.
+            // sengaja tidak dibedakan email/password yang salah
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
-        // Ganti session ID setelah login untuk mencegah session fixation.
+        // cegah session fixation
         $request->session()->regenerate();
 
-        // intended(): kembali ke halaman yang tadi dicoba dibuka sebelum dipaksa login.
         return redirect()->intended(route('dashboard'));
     }
 
@@ -42,7 +40,6 @@ class LoginController extends Controller
     {
         Auth::logout();
 
-        // Hapus data session lama & buat CSRF token baru agar session lama tidak bisa dipakai lagi.
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

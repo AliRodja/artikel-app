@@ -22,12 +22,10 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            // "confirmed" → wajib ada field password_confirmation yang nilainya sama.
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
-        // Hanya field yang lolos validasi yang disimpan (aman dari mass assignment).
-        // Password otomatis di-hash oleh cast 'password' => 'hashed' di model User.
+        // password di-hash otomatis lewat cast 'hashed' di model User
         $user = User::create($validated);
 
         Auth::login($user);

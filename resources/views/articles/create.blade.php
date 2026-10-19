@@ -7,7 +7,6 @@
         <a href="{{ route('articles.index') }}" class="link text-sm">← Kembali ke Artikel Saya</a>
         <h1 class="mt-4 mb-6 text-2xl font-bold text-gray-900">Tulis Artikel</h1>
 
-        {{-- enctype multipart/form-data wajib agar file gambar ikut terkirim; tanpanya $request->file() selalu null. --}}
         <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" class="card p-6">
             @csrf
 

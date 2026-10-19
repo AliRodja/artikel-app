@@ -10,7 +10,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // @vite() di layout tidak butuh dev server / hasil build saat test.
         $this->withoutVite();
     }
 }
