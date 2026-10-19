@@ -113,7 +113,7 @@ Database ......... artikel_app
 Host ............. 127.0.0.1
 ```
 
-Jika muncul error, lihat bagian [Troubleshooting](#10-troubleshooting).
+Jika muncul error, lihat bagian [Troubleshooting](#11-troubleshooting).
 
 ### Langkah 6 — Buat tabel dan isi data contoh
 
@@ -362,7 +362,27 @@ lang/id/  lang/id.json                     terjemahan Bahasa Indonesia
 
 ---
 
-## 9. Ringkasan Perintah
+## 9. Automated Test
+
+```bash
+php artisan test
+```
+
+Test memakai database **SQLite in-memory** (diatur di `phpunit.xml`), sehingga database MySQL `artikel_app`
+**tidak tersentuh**. Butuh ekstensi PHP `pdo_sqlite`. Jika muncul koneksi ke MySQL saat test, jalankan
+`php artisan config:clear` terlebih dahulu (konfigurasi yang ter-cache mengabaikan pengaturan `phpunit.xml`).
+
+| File | Jumlah | Yang diuji |
+|---|---|---|
+| `tests/Feature/AuthTest.php` | 11 | Register (+ validasi, password ter-hash), login benar/salah, throttle login (429), logout, kirim link reset, reset password + token tidak bisa dipakai ulang, token palsu ditolak, middleware `auth` & `guest` |
+| `tests/Feature/ArticleAuthorizationTest.php` | 9 | Pemilik bisa lihat/edit/update/hapus; user lain **403** (lihat, edit, update, hapus); daftar hanya artikel sendiri; tamu diarahkan ke login; `user_id` tidak bisa disisipkan dari form; publik hanya melihat Published (Draft 404) dan tidak ada tombol kelola |
+| `tests/Feature/ArticleReportTest.php` | 9 | Soal 2: INNER JOIN membuang artikel tanpa penulis, hanya `status = 1`, nama & email dari tabel `users`, urut `created_at` terbaru, 10 per halaman, search judul/nama/email, search tidak membocorkan Draft, kata kunci terbawa di link pagination, tamu ditolak |
+
+Hasil: **29 test, 112 assertion, semua lulus.**
+
+---
+
+## 10. Ringkasan Perintah
 
 ```bash
 git clone https://github.com/AliRodja/artikel-app.git
@@ -382,7 +402,7 @@ php artisan serve
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 | Pesan error | Penyebab | Solusi |
 |---|---|---|

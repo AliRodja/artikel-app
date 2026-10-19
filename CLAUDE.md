@@ -148,7 +148,10 @@ Jika dev server Vite tidak mengenali class Tailwind di file/folder Blade baru, `
 - [x] Perbaikan kecil: timezone WIB, halaman 403 Bahasa Indonesia, email reset Bahasa Indonesia.
 - [x] Cocokkan fitur dengan rubrik Soal 1 & Soal 2 satu per satu (+ uji register & ganti gambar) → README bagian 5.
 - [x] README untuk penilai: fitur vs rubrik, bukti INNER JOIN, struktur database, route, keputusan desain.
-- (Opsional) Feature test sederhana dengan PHPUnit/Pest untuk auth, authorization, dan query Soal 2.
+- [x] Feature test PHPUnit (`php artisan test`, SQLite in-memory dari `phpunit.xml`, MySQL aman): `AuthTest` (11),
+  `ArticleAuthorizationTest` (9), `ArticleReportTest` (9) → 29 test / 112 assertion lulus. Sudah dibuktikan bisa gagal
+  dengan sabotase sementara (policy selalu true, `leftJoin`, search tanpa closure). `TestCase` memanggil
+  `withoutVite()`; `ArticleFactory` punya state `published()` / `draft()`.
 - `npm run build` sebelum dikumpulkan.
 - **README.md** untuk penilai: requirement (PHP, Composer, MySQL, Node), langkah instalasi
   (`composer install`, `cp .env.example .env`, `php artisan key:generate`, set DB, `php artisan migrate --seed`,
